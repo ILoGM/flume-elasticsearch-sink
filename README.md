@@ -75,10 +75,10 @@ Example of agent named agent:
   agent.sinks.es_sink.es.serializer.avro.schema.file=/usr/local/schema.avsc
 ````
 
-####Available serializers
-#####com.cognitree.flume.sink.elasticsearch.SimpleSerializer
+#### Available serializers
+##### com.cognitree.flume.sink.elasticsearch.SimpleSerializer
 This Serializer assumes the event body to be in JSON format
-#####com.cognitree.flume.sink.elasticsearch.CsvSerializer
+##### com.cognitree.flume.sink.elasticsearch.CsvSerializer
 This Serializer assumes the event body to be in CSV format with custom delimiter specified.
 
 | Property Name                              | Default | Description                                                                                   |
@@ -86,7 +86,7 @@ This Serializer assumes the event body to be in CSV format with custom delimiter
 | es.serializer.csv.fields                   | -            | Must be specified, fires exception otherwise.                                                 |
 | es.serializer.csv.delimiter                | ,            | Delimiter for *es.serializer.csv.fields* property                                             |
 
-#####com.cognitree.flume.sink.elasticsearch.HeaderBasedSerializer
+##### com.cognitree.flume.sink.elasticsearch.HeaderBasedSerializer
 This Serializer assumes the event body as the main field and event headers as additional fields for json document.
 
 | Property Name                              | Default | Description                                                                                   |
@@ -120,13 +120,13 @@ then Serializer will produce json doc like this:
 }
 ```
 
-####Available index builders
+#### Available index builders
 
-#####com.cognitree.flume.sink.elasticsearch.HeaderBasedIndexBuilder
+##### com.cognitree.flume.sink.elasticsearch.HeaderBasedIndexBuilder
 
 This builder doesn't have configurable parameters. You need to put FlumeEvent headers header called 'index' to customize target index name (default index name: 'default') and 'type' to customise target document type (default document type: 'default').
 
-#####com.cognitree.flume.sink.elasticsearch.TimestampBasedIndexBuilder
+##### com.cognitree.flume.sink.elasticsearch.TimestampBasedIndexBuilder
 This builder uses *timestamp* or *@timestamp* header, which expected to be a unix timestamp in milliseconds, to build index name, e.g. you can create names like: _my-awesome-index-2019-01-01_.
 
 | Property Name                              | Default | Description                                                                                   |
