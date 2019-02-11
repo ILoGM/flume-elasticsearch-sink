@@ -68,6 +68,8 @@ public class Constants {
 
     public static final String ES_SERIALIZER = "es.serializer";
     public static final String DEFAULT_ES_SERIALIZER = "com.cognitree.flume.sink.elasticsearch.SimpleSerializer";
+    public static final String ES_SERIALIZER_THROW_EXCEPTIONS = "es.serializer.throwExceptions";
+    public static final Boolean DEFAULT_ES_SERIALIZER_THROW_EXCEPTIONS = true;
 
     // Mandatory Properties
     public static final String ES_CLUSTER_NAME = "cluster.name";

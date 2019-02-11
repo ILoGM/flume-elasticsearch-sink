@@ -51,6 +51,8 @@ public class ElasticSearchSink extends AbstractSink implements Configurable {
 
     private Serializer serializer;
 
+    private Boolean throwSerializationException;
+
     @Override
     public void configure(Context context) {
         String[] hosts = getHosts(context);
@@ -88,8 +90,24 @@ public class ElasticSearchSink extends AbstractSink implements Configurable {
                     String index = indexBuilder.getIndex(event);
                     String type = indexBuilder.getType(event);
                     String id = indexBuilder.getId(event);
-                    XContentBuilder xContentBuilder = serializer.serialize(event);
-                    if(xContentBuilder != null) {
+
+                    XContentBuilder xContentBuilder;
+                    try {
+                        xContentBuilder = serializer.serialize(event);
+                    } catch (Exception ex) {
+                        if (throwSerializationException) {
+                            throw ex;
+                        } else {
+                            logger.warn("Error in serializing event.", ex);
+                            logger.debug("Event headers: {}, body: {}", event.getHeaders(), body);
+                            logger.warn("Skipping event.");
+
+                            txn.commit();
+                            return Status.READY;
+                        }
+                    }
+
+                    if (xContentBuilder != null) {
                         if (!StringUtil.isNullOrEmpty(id)) {
                             bulkProcessor.add(new IndexRequest(index, type, id)
                                     .source(xContentBuilder));
@@ -148,6 +166,8 @@ public class ElasticSearchSink extends AbstractSink implements Configurable {
         if (StringUtils.isNotEmpty(context.getString(ES_SERIALIZER))) {
             serializerClass = context.getString(ES_SERIALIZER);
         }
+        this.throwSerializationException = context.getBoolean(
+                ES_SERIALIZER_THROW_EXCEPTIONS, DEFAULT_ES_SERIALIZER_THROW_EXCEPTIONS);
         this.serializer = instantiateClass(serializerClass);
         if(this.serializer != null) {
             this.serializer.configure(context);
